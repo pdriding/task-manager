@@ -31,8 +31,6 @@ export function TeamContextProvider({ children }) {
     setSelectedTeam,
   };
 
-  console.log(contextValue);
-
   return (
     <TeamContext.Provider value={contextValue}>{children}</TeamContext.Provider>
   );

@@ -2,23 +2,39 @@ import { useRef, useEffect } from "react";
 import { createPortal } from "react-dom";
 
 function Modal({ open, children, className = "", onClose }) {
-  const dialog = useRef();
+  const dialogRef = useRef(null);
 
-  // open/close on `open` prop changes
+  // Handle dialog open/close
   useEffect(() => {
-    if (!dialog.current) return;
-    if (open) {
-      dialog.current.showModal();
-    } else {
-      // only closes the native dialog, does NOT call onClose again
-      dialog.current.close();
+    const dialog = dialogRef.current;
+    if (!dialog) return;
+
+    if (open && !dialog.open) {
+      dialog.showModal();
+    } else if (!open && dialog.open) {
+      dialog.close();
     }
   }, [open]);
 
-  if (!open) return null;
+  // Call onClose when dialog is closed manually (e.g. ESC or clicking backdrop)
+  useEffect(() => {
+    const dialog = dialogRef.current;
+    if (!dialog) return;
+
+    const handleClose = () => onClose?.();
+
+    dialog.addEventListener("close", handleClose);
+    return () => dialog.removeEventListener("close", handleClose);
+  }, [onClose]);
+
+  if (typeof window === "undefined") return null;
 
   return createPortal(
-    <dialog className={`modal ${className}`} ref={dialog} onClose={onClose}>
+    <dialog
+      ref={dialogRef}
+      className={`modal flex flex-col gap-2fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2
+             rounded-xl shadow-lg p-6 backdrop:bg-black/30 ${className}`}
+    >
       {children}
     </dialog>,
     document.getElementById("modal")

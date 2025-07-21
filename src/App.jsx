@@ -1,8 +1,15 @@
+import Header from "./components/Header";
+import TaskList from "./components/TaskList";
+import { TeamContextProvider } from "./context/TeamContext";
+
 function App() {
   return (
     <>
-      <div className="bg-red-500">
-        <h1>Welcome 💪</h1>
+      <div>
+        <TeamContextProvider>
+          <Header />
+          <TaskList />
+        </TeamContextProvider>
       </div>
     </>
   );

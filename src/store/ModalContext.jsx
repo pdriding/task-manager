@@ -1,6 +1,6 @@
 import { useState, createContext, useContext } from "react";
 import TaskForm from "../components/TaskForm";
-import Modal from "../components/modal";
+import Modal from "../components/Modal";
 
 const ModalContext = createContext();
 

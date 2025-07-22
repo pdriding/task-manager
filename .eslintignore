@@ -1,0 +1,8 @@
+# dependencies
+node_modules/
+
+# Vite build output
+dist/
+
+# If you ever add a "build" script instead of “dist”
+build/

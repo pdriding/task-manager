@@ -6,3 +6,5 @@ dist/
 
 # If you ever add a "build" script instead of “dist”
 build/
+
+backend/

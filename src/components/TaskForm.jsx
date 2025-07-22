@@ -1,5 +1,3 @@
-import { useContext } from "react";
-import TeamContext from "../context/TeamContext";
 import Input from "./UI/Input";
 import useHttp from "../hooks/useHttp";
 import Error from "./Error";

@@ -1,4 +1,4 @@
-import { useContext, useLayoutEffect } from "react";
+import { useContext } from "react";
 import TeamContext from "../context/TeamContext";
 import { useModal } from "../store/ModalContext";
 import useHttp from "../hooks/useHttp";
@@ -8,12 +8,12 @@ const requestConfig = {};
 
 export default function TaskList() {
   const { openModal } = useModal();
-  const { teams, selectedTeam, setSelectedTeam } = useContext(TeamContext);
-  const {
-    data: loadedTasks,
-    isLoading,
-    error,
-  } = useHttp("http://localhost:3001/tasks", requestConfig, []);
+  const { selectedTeam } = useContext(TeamContext);
+  const { data: loadedTasks } = useHttp(
+    "http://localhost:3001/tasks",
+    requestConfig,
+    []
+  );
 
   function showForm() {
     openModal("task-form");
@@ -32,7 +32,7 @@ export default function TaskList() {
       {currentTasks && (
         <ul>
           {currentTasks.map((task) => (
-            <li>
+            <li key={task.title}>
               <Card
                 title={task.title}
                 priority={task.priority}

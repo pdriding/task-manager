@@ -2,6 +2,8 @@ import Input from "./UI/Input";
 import useHttp from "../hooks/useHttp";
 import Error from "./Error";
 import LoadingSpinner from "./UI/LoadingSpinner";
+import { useContext } from "react";
+import TeamContext from "../context/TeamContext";
 
 const requestConfig = {
   method: "POST",
@@ -11,10 +13,9 @@ const requestConfig = {
 };
 
 export default function TaskForm() {
-  const { teams, selectedTeam, setSelectedTeam } = useContext(TeamContext);
+  const { selectedTeam } = useContext(TeamContext);
 
   const {
-    data,
     isLoading: isSending,
     error,
     sendRequest,

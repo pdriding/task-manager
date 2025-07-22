@@ -44,8 +44,15 @@ await loadTasks();
 
 // --- ROUTES ---
 
-app.get("/tasks", (req, res) => {
-  res.json(tasks);
+app.get("/tasks", async (req, res) => {
+  try {
+    const data = await fs.readFile(TASKS_FILE, "utf-8");
+    const fileTasks = JSON.parse(data);
+    res.json(fileTasks);
+  } catch (err) {
+    console.error("Failed to read tasks file:", err);
+    res.status(500).json({ message: "Could not load tasks." });
+  }
 });
 
 app.post("/tasks", async (req, res) => {

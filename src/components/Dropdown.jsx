@@ -1,7 +1,7 @@
 import { useState, useContext } from "react";
 import TeamContext from "../context/TeamContext";
 
-function Dropdown({ options, selected, setSelected }) {
+function Dropdown() {
   const [isOpen, setIsOpen] = useState(false);
   const { teams, selectedTeam, setSelectedTeam } = useContext(TeamContext);
 

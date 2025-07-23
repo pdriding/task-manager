@@ -1,4 +1,4 @@
-import { createContext, useState, useReducer } from "react";
+import { createContext, useState } from "react";
 
 export const TeamContext = createContext({
   teams: [],
@@ -8,27 +8,18 @@ export const TeamContext = createContext({
   dispatchTasks: () => {},
 });
 
-function taskReducer(state, action) {
-  switch (action.type) {
-    case "ADD_TASK":
-      return [...state];
-    default:
-      return state;
-  }
-}
-
 export function TeamContextProvider({ children }) {
   const teams = ["Marketing", "IT", "Accounting"];
-  const [tasks, dispatchTasks] = useReducer(taskReducer, []);
-  // TODO
+  const [tasks, setTasks] = useState([]);
+
   const [selectedTeam, setSelectedTeam] = useState("Select team");
 
   const contextValue = {
     teams,
     tasks,
-    dispatchTasks,
     selectedTeam,
     setSelectedTeam,
+    setTasks,
   };
 
   return (

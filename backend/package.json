@@ -1,17 +1,16 @@
 {
   "name": "backend",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "Task management backend for the React app",
+  "main": "server.js",
   "type": "module",
   "scripts": {
-    "start": "node app.js"
+    "start": "node server.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "body-parser": "^1.20.2",
     "cors": "^2.8.5",
     "express": "^4.18.2"
   }

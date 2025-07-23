@@ -9,7 +9,6 @@ function Dropdown() {
 
   const handleSelect = (option) => {
     setSelectedTeam(option);
-    console.log(55, selectedTeam);
     setIsOpen(false);
   };
   return (

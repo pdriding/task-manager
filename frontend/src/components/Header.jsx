@@ -5,7 +5,6 @@ import Dropdown from "./Dropdown";
 export default function Header() {
   const { teams } = useContext(TeamContext);
 
-  console.log(teams);
   return (
     <>
       <div className="header">

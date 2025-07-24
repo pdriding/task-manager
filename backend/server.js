@@ -46,6 +46,7 @@ app.put("/tasks/:id", async (req, res) => {
   const updates = req.body;
   try {
     const updatedTask = await updateTask(id, updates);
+    console.log(updatedTask);
     res.json(updatedTask);
   } catch (err) {
     if (err.message === "Task not found") {

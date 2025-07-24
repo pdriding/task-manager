@@ -2,10 +2,10 @@
   "name": "backend",
   "version": "1.0.0",
   "description": "Task management backend for the React app",
-  "main": "server.js",
+  "main": "app.js",
   "type": "module",
   "scripts": {
-    "start": "node server.js"
+    "start": "node app.js"
   },
   "keywords": [],
   "author": "",

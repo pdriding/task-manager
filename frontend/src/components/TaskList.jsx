@@ -25,6 +25,10 @@ export default function TaskList() {
     openModal("edit-form", id);
   }
 
+  function handleDeleteTask(id) {
+    openModal("delete-task", id);
+  }
+
   if (isLoading) return <LoadingSpinner />;
   if (error) return <Error title="Failed to fetch tasks." message={error} />;
   if (!loadedTasks || loadedTasks.length === 0) {
@@ -53,7 +57,8 @@ export default function TaskList() {
                 priority={task.priority}
                 description={task.description}
                 id={task.id}
-                editForm={handleEditForm}
+                editForm={() => openModal("edit-form", task.id)}
+                deleteTask={() => openModal("delete-task", task.id)}
               />
             </li>
           ))}

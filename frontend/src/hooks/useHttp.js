@@ -35,11 +35,19 @@ export default function useHttp(url, config = {}) {
           if (JSON.stringify(tasks) !== JSON.stringify(resData)) {
             setTasks(resData);
           }
-        } else if (method === "POST") {
+        }
+        if (method === "POST") {
           // POST: Append new task
           const newTask = Array.isArray(resData) ? resData[0] : resData;
 
           setTasks((prev) => [...prev, newTask]);
+        }
+
+        if (method === "PUT") {
+          const updated = resData;
+          setTasks((prev) =>
+            prev.map((t) => (t.id === updated.id ? updated : t))
+          );
         }
 
         return resData; // Return response data
@@ -58,7 +66,6 @@ export default function useHttp(url, config = {}) {
   useEffect(() => {
     const method = (config.method || "GET").toUpperCase();
     if (method === "GET") {
-      console.log(55);
       sendRequest().catch((err) => console.error("Initial fetch error:", err));
     }
   }, [sendRequest, config, config.key]); // Include config.key for refresh

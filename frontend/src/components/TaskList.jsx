@@ -37,7 +37,7 @@ export default function TaskList() {
   }
 
   const currentTasks = loadedTasks.filter((task) => task.team === selectedTeam);
-
+  console.log(loadedTasks);
   return (
     <div className="mt-5">
       <button onClick={showForm}>Add Task</button>

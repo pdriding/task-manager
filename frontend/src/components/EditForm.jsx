@@ -1,6 +1,6 @@
-import { useState, useContext, useEffect, useMemo } from "react";
+import { useState, useContext, useEffect } from "react";
 import Input from "./UI/Input";
-// import Error from "./Error";
+import Error from "./Error";
 import TeamContext from "../context/TeamContext";
 import useHttp from "../hooks/useHttp";
 
@@ -24,10 +24,7 @@ export default function EditForm({ id, onClose }) {
 
   const { tasks } = useContext(TeamContext);
 
-  const currentTask = useMemo(() => {
-    const found = tasks.find((t) => t.id === id);
-    return found ? found.tasks : null;
-  }, [tasks, id]);
+  const currentTask = tasks.find((t) => t.id === id);
 
   useEffect(() => {
     if (currentTask) {
@@ -37,24 +34,20 @@ export default function EditForm({ id, onClose }) {
     }
   }, [currentTask]);
 
-  function handleSubmit() {
+  function handleSubmit(event) {
+    event.preventDefault();
     const team = tasks.find((t) => t.id === id)?.team;
-    const userData = { title, description, priority };
+    const userData = { title, description, priority, team, id };
 
-    sendRequest(
-      JSON.stringify({
-        updatedTask: {
-          team,
-          tasks: userData,
-        },
-      })
-    );
+    sendRequest(JSON.stringify(userData));
+
+    onClose();
   }
 
   return (
     <>
       <h2 className="text-center">Edit Task</h2>
-      <div>
+      <form onSubmit={handleSubmit}>
         <Input
           label="Title: "
           type="text"
@@ -81,21 +74,16 @@ export default function EditForm({ id, onClose }) {
           ]}
         />
 
-        {/* {error && <Error title="Failed to submit..." message={error} />} */}
+        {error && <Error title="Failed to submit..." message={error} />}
         <div className="mt-4 flex gap-2 justify-end">
-          <button
-            type="button"
-            className="button"
-            onClick={handleSubmit}
-            disabled={isSending}
-          >
+          <button type="submit" className="button" disabled={isSending}>
             {isSending ? "Saving…" : "Edit Task"}
           </button>
           <button type="button" className="button" onClick={onClose}>
             Cancel
           </button>
         </div>
-      </div>
+      </form>
     </>
   );
 }

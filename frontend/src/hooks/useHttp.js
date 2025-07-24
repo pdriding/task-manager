@@ -4,12 +4,24 @@ import TeamContext from "../context/TeamContext";
 async function sendHttpRequest(url, config) {
   const response = await fetch(url, config);
 
-  const resData = await response.json();
   if (!response.ok) {
-    throw new Error(resData.message || "Something went wrong.");
+    let msg = `Error ${response.status}`;
+    try {
+      const errJson = await response.json();
+      msg = errJson.message || msg;
+    } catch {
+      const text = await response.text();
+      if (text) msg = text;
+    }
+    throw new Error(msg);
   }
 
-  return resData;
+  // Always JSON on 2xx here
+  try {
+    return await response.json();
+  } catch {
+    return null;
+  }
 }
 
 export default function useHttp(url, config = {}) {
@@ -18,7 +30,7 @@ export default function useHttp(url, config = {}) {
   const [error, setError] = useState(null);
 
   const sendRequest = useCallback(
-    async function (bodyData) {
+    async (bodyData) => {
       setIsLoading(true);
       setError(null);
 
@@ -29,51 +41,43 @@ export default function useHttp(url, config = {}) {
         });
 
         const method = (config.method || "GET").toUpperCase();
-
-        if (method === "GET") {
-          // GET: Replace tasks if different
-          if (JSON.stringify(tasks) !== JSON.stringify(resData)) {
-            setTasks(resData);
+        setTasks((prev) => {
+          switch (method) {
+            case "GET": {
+              return resData || [];
+            }
+            case "POST": {
+              const newTask = Array.isArray(resData) ? resData[0] : resData;
+              return [...prev, newTask];
+            }
+            case "PUT":
+              return prev.map((t) => (t.id === resData.id ? resData : t));
+            case "DELETE": {
+              const deletedId =
+                resData && typeof resData === "object" ? resData.id : resData;
+              return prev.filter((t) => t.id !== deletedId);
+            }
+            default:
+              return prev;
           }
-        }
-        if (method === "POST") {
-          // POST: Append new task
-          const newTask = Array.isArray(resData) ? resData[0] : resData;
+        });
 
-          setTasks((prev) => [...prev, newTask]);
-        }
-
-        if (method === "PUT") {
-          const updated = resData;
-          setTasks((prev) =>
-            prev.map((t) => (t.id === updated.id ? updated : t))
-          );
-        }
-
-        return resData; // Return response data
+        return resData;
       } catch (err) {
-        console.error("Fetch error:", err.message);
         setError(err.message);
         throw err;
       } finally {
         setIsLoading(false);
       }
     },
-    [url, config, setTasks, tasks]
+    [url, config.method, setTasks]
   );
 
-  // Auto-fetch for GET requests
   useEffect(() => {
-    const method = (config.method || "GET").toUpperCase();
-    if (method === "GET") {
-      sendRequest().catch((err) => console.error("Initial fetch error:", err));
+    if ((config.method || "GET").toUpperCase() === "GET") {
+      sendRequest().catch(console.error);
     }
-  }, [sendRequest, config, config.key]); // Include config.key for refresh
+  }, [sendRequest, config.key]);
 
-  return {
-    tasks,
-    isLoading,
-    error,
-    sendRequest,
-  };
+  return { tasks, isLoading, error, sendRequest };
 }

@@ -17,30 +17,22 @@ export default function TaskList() {
     error,
   } = useHttp("http://localhost:3001/tasks", requestConfig, []);
 
-  function showForm() {
-    openModal("task-form");
-  }
-
-  function handleEditForm(id) {
-    openModal("edit-form", id);
-  }
-
   if (isLoading) return <LoadingSpinner />;
   if (error) return <Error title="Failed to fetch tasks." message={error} />;
   if (!loadedTasks || loadedTasks.length === 0) {
     return (
       <div className="mt-5">
-        <button onClick={showForm}>Add Task</button>
+        <button onClick={() => openModal("task-form")}>Add Task</button>
         <p className="mt-4 text-gray-600">No tasks yet. Please add some!</p>
       </div>
     );
   }
 
   const currentTasks = loadedTasks.filter((task) => task.team === selectedTeam);
-  console.log(loadedTasks);
+
   return (
     <div className="mt-5">
-      <button onClick={showForm}>Add Task</button>
+      <button onClick={() => openModal("task-form")}>Add Task</button>
 
       {currentTasks.length === 0 ? (
         <p className="mt-4 text-gray-500">No tasks for this team yet.</p>
@@ -53,7 +45,8 @@ export default function TaskList() {
                 priority={task.priority}
                 description={task.description}
                 id={task.id}
-                editForm={handleEditForm}
+                editForm={() => openModal("edit-form", task.id)}
+                deleteTask={() => openModal("delete-task", task.id)}
               />
             </li>
           ))}

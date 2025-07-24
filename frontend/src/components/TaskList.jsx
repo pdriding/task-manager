@@ -17,18 +17,6 @@ export default function TaskList() {
     error,
   } = useHttp("http://localhost:3001/tasks", requestConfig, []);
 
-  function showForm() {
-    openModal("task-form");
-  }
-
-  function handleEditForm(id) {
-    openModal("edit-form", id);
-  }
-
-  function handleDeleteTask(id) {
-    openModal("delete-task", id);
-  }
-
   if (isLoading) return <LoadingSpinner />;
   if (error) return <Error title="Failed to fetch tasks." message={error} />;
   if (!loadedTasks || loadedTasks.length === 0) {
@@ -41,10 +29,10 @@ export default function TaskList() {
   }
 
   const currentTasks = loadedTasks.filter((task) => task.team === selectedTeam);
-  console.log(loadedTasks);
+
   return (
     <div className="mt-5">
-      <button onClick={showForm}>Add Task</button>
+      <button onClick={() => openModal("task-form")}>Add Task</button>
 
       {currentTasks.length === 0 ? (
         <p className="mt-4 text-gray-500">No tasks for this team yet.</p>

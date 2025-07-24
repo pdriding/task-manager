@@ -1,4 +1,5 @@
 import useHttp from "../hooks/useHttp";
+import Error from "./Error";
 
 const updateConfig = {
   method: "DELETE",
@@ -9,11 +10,10 @@ const updateConfig = {
 
 export default function DeleteTask({ id, onClose }) {
   console.log(id);
-  const {
-    isLoading: isSending,
-    error,
-    sendRequest,
-  } = useHttp(`http://localhost:3001/tasks/${id}`, updateConfig);
+  const { error, sendRequest } = useHttp(
+    `http://localhost:3001/tasks/${id}`,
+    updateConfig
+  );
   async function handleDelete() {
     const data = {
       id,
@@ -29,6 +29,7 @@ export default function DeleteTask({ id, onClose }) {
       <p className="text-gray-700 mb-6">
         Are you sure you want to delete this task? This action cannot be undone.
       </p>
+      {error && <Error title="Failed to submit..." message={error} />}
       <div className="flex justify-end gap-3">
         <button
           onClick={onClose}

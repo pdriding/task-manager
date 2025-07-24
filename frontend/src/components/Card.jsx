@@ -3,7 +3,6 @@ export default function Card({
   description,
   priority,
   editForm,
-  id,
   deleteTask,
 }) {
   return (

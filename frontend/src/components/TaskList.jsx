@@ -22,7 +22,7 @@ export default function TaskList() {
   if (!loadedTasks || loadedTasks.length === 0) {
     return (
       <div className="mt-5">
-        <button onClick={showForm}>Add Task</button>
+        <button onClick={() => openModal("task-form")}>Add Task</button>
         <p className="mt-4 text-gray-600">No tasks yet. Please add some!</p>
       </div>
     );

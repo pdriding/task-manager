@@ -5,7 +5,6 @@ import path from "path";
 
 const app = express();
 const PORT = process.env.PORT ?? 3001;
-
 // File path for tasks.json (in the same directory as server.mjs)
 const TASKS_FILE = path.resolve("data", "tasks.json");
 
@@ -56,13 +55,9 @@ app.get("/tasks", async (req, res) => {
 });
 
 app.post("/tasks", async (req, res) => {
-  const taskData = req.body.newTask;
+  const taskData = req.body;
 
-  if (
-    taskData === null ||
-    taskData.tasks === null ||
-    taskData.tasks.length === 0
-  ) {
+  if (taskData === null) {
     return res.status(400).json({ message: "Missing data." });
   }
 
@@ -77,14 +72,15 @@ app.post("/tasks", async (req, res) => {
 app.put("/tasks/:id", async (req, res) => {
   const { id } = req.params;
   const updates = req.body;
+  console.log(updates);
   const idx = tasks.findIndex((t) => t.id === id);
 
   if (idx === -1) {
     return res.status(404).json({ message: "Task not found." });
   }
-
+  // TODO
   tasks[idx] = { ...tasks[idx], ...updates };
-
+  console.log(tasks);
   await saveTasks();
 
   return res.json(tasks[idx]);

@@ -16,12 +16,14 @@ function Modal({ open, children, className = "", onClose }) {
     }
   }, [open]);
 
-  // Call onClose when dialog is closed manually (e.g. ESC or clicking backdrop)
+  // Call onClose when dialog is closed manually (e.g., ESC or clicking backdrop)
   useEffect(() => {
     const dialog = dialogRef.current;
     if (!dialog) return;
 
-    const handleClose = () => onClose?.();
+    const handleClose = () => {
+      onClose?.();
+    };
 
     dialog.addEventListener("close", handleClose);
     return () => dialog.removeEventListener("close", handleClose);
@@ -32,7 +34,7 @@ function Modal({ open, children, className = "", onClose }) {
   return createPortal(
     <dialog
       ref={dialogRef}
-      className={`modal flex flex-col gap-2fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2
+      className={`modal flex flex-col gap-2 fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2
              rounded-xl shadow-lg p-6 backdrop:bg-black/30 ${className}`}
     >
       {children}

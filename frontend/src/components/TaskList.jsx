@@ -11,9 +11,8 @@ const requestConfig = {};
 export default function TaskList() {
   const { openModal } = useModal();
   const { selectedTeam } = useContext(TeamContext);
-
   const {
-    data: loadedTasks,
+    tasks: loadedTasks,
     isLoading,
     error,
   } = useHttp("http://localhost:3001/tasks", requestConfig, []);
@@ -22,7 +21,7 @@ export default function TaskList() {
     openModal("task-form");
   }
 
-  function editForm(id) {
+  function handleEditForm(id) {
     openModal("edit-form", id);
   }
 
@@ -37,14 +36,8 @@ export default function TaskList() {
     );
   }
 
-  const currentTasks = loadedTasks
-    .filter((task) => task.team === selectedTeam)
-    .map(({ id, tasks, team }) => ({
-      id,
-      ...tasks,
-      team,
-    }));
-
+  const currentTasks = loadedTasks.filter((task) => task.team === selectedTeam);
+  console.log(loadedTasks);
   return (
     <div className="mt-5">
       <button onClick={showForm}>Add Task</button>
@@ -60,7 +53,7 @@ export default function TaskList() {
                 priority={task.priority}
                 description={task.description}
                 id={task.id}
-                editForm={editForm}
+                editForm={handleEditForm}
               />
             </li>
           ))}

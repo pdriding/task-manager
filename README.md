@@ -1,4 +1,4 @@
-[![CI](https://github.com/pdriding/task-manager/actions/workflows/ci.yml/badge.svg?branch=feature%2Ftask-list)](https://github.com/pdriding/task-manager/actions/workflows/ci.yml)
+[![CI](https://github.com/pdriding/task-manager/actions/workflows/ci.yml/badge.svg)](https://github.com/pdriding/task-manager/actions/workflows/ci.yml)
 
 A React + Vite task manager with in‑browser persistence, built as a portfolio project.
 

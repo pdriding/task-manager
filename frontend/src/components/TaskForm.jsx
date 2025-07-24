@@ -2,7 +2,7 @@ import Input from "./UI/Input";
 import useHttp from "../hooks/useHttp";
 import Error from "./Error";
 import LoadingSpinner from "./UI/LoadingSpinner";
-import { useContext, useState } from "react";
+import { useContext, useState, useEffect } from "react";
 import TeamContext from "../context/TeamContext";
 
 const requestConfig = {
@@ -12,33 +12,41 @@ const requestConfig = {
   },
 };
 
-export default function TaskForm() {
+export default function TaskForm({ onClose }) {
+  useEffect(() => {
+    const handler = () => console.log("PAGE IS RELOADING");
+    window.addEventListener("beforeunload", handler);
+    return () => window.removeEventListener("beforeunload", handler);
+  }, []);
+
   const { selectedTeam } = useContext(TeamContext);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
-  const [priority, setPriority] = useState("");
+  const [priority, setPriority] = useState("low");
 
   const {
     isLoading: isSending,
     error,
     sendRequest,
-    clearData,
   } = useHttp("http://localhost:3001/tasks", requestConfig);
 
-  function handleSubmit(event) {
+  async function handleSubmit(event) {
     event.preventDefault();
 
-    const taskData = { title, description, priority };
+    const taskData = {
+      team: selectedTeam,
+      title,
+      description,
+      priority,
+    };
 
-    sendRequest(
-      JSON.stringify({
-        newTask: {
-          team: selectedTeam,
-          tasks: taskData,
-        },
-      })
-    );
-    clearData();
+    try {
+      await sendRequest(JSON.stringify(taskData));
+
+      onClose();
+    } catch (err) {
+      console.error("Fetch error:", err.message);
+    }
   }
 
   if (isSending) {
@@ -48,24 +56,23 @@ export default function TaskForm() {
   return (
     <>
       <h2 className="text-center">Add New Task</h2>
-
       <form onSubmit={handleSubmit}>
         <Input
-          label="Title:"
+          label="Title: "
           type="text"
           id="title"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
         />
         <Input
-          label="Description:"
+          label="Description: "
           type="text"
           id="description"
           value={description}
           onChange={(e) => setDescription(e.target.value)}
         />
         <Input
-          label="Priority:"
+          label="Priority: "
           type="select"
           id="priority"
           value={priority}
@@ -77,9 +84,17 @@ export default function TaskForm() {
         />
 
         {error && <Error title="Failed to submit..." message={error} />}
-        <div className="mt-4 flex justify-end">
-          <button type="submit" className="button">
-            Add Task
+        <div className="mt-4 flex gap-2 justify-end">
+          <button
+            type="button"
+            className="button"
+            onClick={handleSubmit}
+            disabled={isSending}
+          >
+            {isSending ? "Saving…" : "Add Task"}
+          </button>
+          <button type="button" className="button" onClick={onClose}>
+            Cancel
           </button>
         </div>
       </form>

@@ -29,7 +29,7 @@ export default function TaskList() {
   }
 
   const currentTasks = loadedTasks.filter((task) => task.team === selectedTeam);
-
+  console.log(loadedTasks);
   return (
     <div className="mt-5">
       <button onClick={() => openModal("task-form")}>Add Task</button>
@@ -45,6 +45,8 @@ export default function TaskList() {
                 priority={task.priority}
                 description={task.description}
                 id={task.id}
+                completed={task.completed}
+                dueDate={task.dueDate}
                 editForm={() => openModal("edit-form", task.id)}
                 deleteTask={() => openModal("delete-task", task.id)}
               />

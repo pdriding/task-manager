@@ -9,7 +9,6 @@ const updateConfig = {
 };
 
 export default function DeleteTask({ id, onClose }) {
-  console.log(id);
   const { error, sendRequest } = useHttp(
     `http://localhost:3001/tasks/${id}`,
     updateConfig

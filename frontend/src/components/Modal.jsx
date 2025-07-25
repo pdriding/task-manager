@@ -35,7 +35,7 @@ function Modal({ open, children, className = "", onClose }) {
     <dialog
       ref={dialogRef}
       className={`modal flex flex-col gap-2 fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2
-             rounded-xl shadow-lg p-6 backdrop:bg-black/30 ${className}`}
+             rounded-xl shadow-lg p-6 backdrop:bg-black/30 ${className} overflow-visible`}
     >
       {children}
     </dialog>,

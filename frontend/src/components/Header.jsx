@@ -9,6 +9,7 @@ export default function Header() {
     <>
       <div className="header">
         <h1 className="text-center">TEAM TASK MANAGER</h1>
+        <h2>light/dark symbols</h2>
         <Dropdown options={teams} />
       </div>
     </>

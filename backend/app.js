@@ -56,14 +56,27 @@ app.get("/tasks", async (req, res) => {
 
 app.post("/tasks", async (req, res) => {
   const taskData = req.body;
-
-  if (taskData === null) {
+  if (!taskData) {
     return res.status(400).json({ message: "Missing data." });
   }
 
-  const newTask = { id: Date.now().toString(), ...taskData };
-  tasks.push(newTask);
+  // 1. Ensure dueDate exists and is valid
+  if (!taskData.dueDate) {
+    return res.status(400).json({ message: "dueDate is required." });
+  }
+  const due = new Date(taskData.dueDate);
+  if (isNaN(due)) {
+    return res.status(400).json({ message: "Invalid dueDate format." });
+  }
 
+  // 2. Build task object, storing the ISO string
+  const newTask = {
+    id: Date.now().toString(),
+    ...taskData,
+    dueDate: due.toISOString(), // normalize formatting
+  };
+
+  tasks.push(newTask);
   await saveTasks();
 
   return res.status(201).json(newTask);
@@ -72,15 +85,13 @@ app.post("/tasks", async (req, res) => {
 app.put("/tasks/:id", async (req, res) => {
   const { id } = req.params;
   const updates = req.body;
-  console.log(updates);
   const idx = tasks.findIndex((t) => t.id === id);
 
   if (idx === -1) {
     return res.status(404).json({ message: "Task not found." });
   }
-  // TODO
+
   tasks[idx] = { ...tasks[idx], ...updates };
-  console.log(tasks);
   await saveTasks();
 
   return res.json(tasks[idx]);
@@ -97,7 +108,7 @@ app.delete("/tasks/:id", async (req, res) => {
 
   await saveTasks();
 
-  return res.sendStatus(204);
+  return res.status(200).json({ id });
 });
 
 // 404 and error handling omitted for brevity

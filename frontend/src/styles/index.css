@@ -1,6 +1,13 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap");
 @import "tailwindcss";
 
-/* Container to center app */
+@theme {
+  --font-inter: "Inter", sans-serif;
+  --color-brand-blue-light: #007aff;
+  --color-brand-blue: #007aff;
+  --color-brand-blue-dark: #004fe0;
+}
+
 .app-container {
   max-width: 1200px;
   width: 100%;

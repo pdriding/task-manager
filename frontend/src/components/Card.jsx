@@ -51,7 +51,6 @@ function Card({
         <h3 className="text-xl font-semibold text-gray-800 ">{title}</h3>
 
         <p className="text-sm text-gray-500 mt-2">
-          {console.log(dueDate)}
           Due {format(parseISO(dueDate), "MMM d, yyyy")}
         </p>
 
@@ -59,7 +58,7 @@ function Card({
 
         <div className="mt-6 flex justify-between items-center">
           <span
-            className={`text-sm px-2 py-1 rounded-full font-medium bg-${statusColor}-100 text-${statusColor}-800`}
+            className={`text-sm px-2 py-1 rounded-full font-medium  bg-${statusColor}-100 text-${statusColor}-800`}
           >
             {statusText}
           </span>

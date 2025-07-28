@@ -5,12 +5,13 @@ import useHttp from "../hooks/useHttp";
 import Card from "./Card";
 import LoadingSpinner from "./UI/LoadingSpinner";
 import Error from "./Error";
+import Dropdown from "./Dropdown";
 
 const requestConfig = {};
 
 export default function TaskList() {
   const { openModal } = useModal();
-  const { selectedTeam } = useContext(TeamContext);
+  const { teams, selectedTeam } = useContext(TeamContext);
   const {
     tasks: loadedTasks,
     isLoading,
@@ -19,25 +20,23 @@ export default function TaskList() {
 
   if (isLoading) return <LoadingSpinner />;
   if (error) return <Error title="Failed to fetch tasks." message={error} />;
-  if (!loadedTasks || loadedTasks.length === 0) {
-    return (
-      <div className="mt-5">
-        <button onClick={() => openModal("task-form")}>Add Task</button>
-        <p className="mt-4 text-gray-600">No tasks yet. Please add some!</p>
-      </div>
-    );
-  }
 
-  const currentTasks = loadedTasks.filter((task) => task.team === selectedTeam);
-  console.log(loadedTasks);
+  const currentTasks = (loadedTasks || []).filter(
+    (task) => task.team === selectedTeam
+  );
+
   return (
-    <div className="mt-5">
-      <button onClick={() => openModal("task-form")}>Add Task</button>
+    <div className="mt-5 flex flex-col h-[calc(100vh-4rem)]">
+      <Dropdown options={teams} />
 
-      {currentTasks.length === 0 ? (
-        <p className="mt-4 text-gray-500">No tasks for this team yet.</p>
-      ) : (
-        <ul className="mt-4 space-y-4">
+      <div className="relative flex-1">
+        {currentTasks.length === 0 && (
+          <div className="absolute inset-x-0 top-[33%] flex justify-center transform -translate-y-13">
+            <p className="text-gray-200 text-lg">No tasks for this team yet.</p>
+          </div>
+        )}
+
+        <ul className="space-y-4 p-4">
           {currentTasks.map((task) => (
             <li key={task.id}>
               <Card
@@ -53,7 +52,7 @@ export default function TaskList() {
             </li>
           ))}
         </ul>
-      )}
+      </div>
     </div>
   );
 }

@@ -1,17 +1,17 @@
-import { useContext } from "react";
-import TeamContext from "../context/TeamContext";
-import Dropdown from "./Dropdown";
+import { useModal } from "../store/ModalContext";
 
 export default function Header() {
-  const { teams } = useContext(TeamContext);
-
+  const { openModal } = useModal();
   return (
-    <>
-      <div className="header">
-        <h1 className="text-center">TEAM TASK MANAGER</h1>
-        <h2>light/dark symbols</h2>
-        <Dropdown options={teams} />
+    <header className="h-20 w-full flex items-center justify-between px-6 bg-transparent">
+      <h1 className="text-xl font-bold text-white">Tasks</h1>
+
+      <div className="flex items-center gap-4">
+        <button className="text-white" onClick={() => openModal("task-form")}>
+          Add Task
+        </button>
+        <span className="text-white">🌙/☀️</span>
       </div>
-    </>
+    </header>
   );
 }
